@@ -72,7 +72,8 @@ intr_get_level (void)
      Interrupts". */
   asm volatile ("pushfl; popl %0" : "=g" (flags)); //内连汇编表达式
                                                    //pushfl将flag寄存器存入堆栈
-  return flags & FLAG_IF ? INTR_ON : INTR_OFF;
+                                                   //返回flags的value
+  return flags & FLAG_IF ? INTR_ON : INTR_OFF;     //FLAG_IF是中断标志
 }
 
 /* Enables or disables interrupts as specified by LEVEL and
@@ -108,7 +109,8 @@ intr_disable (void)
   /* Disable interrupts by clearing the interrupt flag.
      See [IA32-v2b] "CLI" and [IA32-v3a] 5.8.1 "Masking Maskable
      Hardware Interrupts". */
-  asm volatile ("cli" : : : "memory");
+  asm volatile ("cli" : : : "memory");//保证线程不被中断
+                                      //clear interrupt, 作用是将标志寄存器的IF（interrupt flag）位置为0, IF=0时将不响应可屏蔽中断。
 
   return old_level;
 }

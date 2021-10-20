@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-12 11:17:37
+ * @LastEditTime: 2021-10-19 23:02:49
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /pintos/src/threads/interrupt.h
+ */
 #ifndef THREADS_INTERRUPT_H
 #define THREADS_INTERRUPT_H
 
@@ -11,7 +19,7 @@ enum intr_level
     INTR_ON               /* Interrupts enabled. */
   };
 
-enum intr_level intr_get_level (void);
+
 enum intr_level intr_set_level (enum intr_level);
 enum intr_level intr_enable (void);
 enum intr_level intr_disable (void);

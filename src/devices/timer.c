@@ -57,7 +57,7 @@ timer_calibrate (void)
       ASSERT (loops_per_tick != 0);
     }
 
-  /* Refine the next 8 bits of loops_per_tick. */
+  /* iRefine the next 8 bits of loops_per_tick. */
   high_bit = loops_per_tick;
   for (test_bit = high_bit >> 1; test_bit != high_bit >> 10; test_bit >>= 1)
     if (!too_many_loops (loops_per_tick | test_bit))
@@ -71,6 +71,7 @@ int64_t
 timer_ticks (void) 
 {
   enum intr_level old_level = intr_disable ();  //关闭中断 返回上一个中断的状态
+                                                // 禁止当前行为被中断， 保存禁止被中断前的中断状态
   int64_t t = ticks;
   intr_set_level (old_level);
   return t;
@@ -89,11 +90,11 @@ timer_elapsed (int64_t then)
 void
 timer_sleep (int64_t ticks) 
 {
-  int64_t start = timer_ticks ();
+  int64_t start = timer_ticks ();//线程开始时间
 
-  ASSERT (intr_get_level () == INTR_ON);
-  while (timer_elapsed (start) < ticks) 
-    thread_yield ();
+  ASSERT (intr_get_level () == INTR_ON);//若中断关闭就直接结束
+  while (timer_elapsed (start) < ticks) //计数ticks
+    thread_yield ();//让步
 }
 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be

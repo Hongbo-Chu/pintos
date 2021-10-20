@@ -301,7 +301,7 @@ thread_exit (void)
 void
 thread_yield (void) 
 {
-  struct thread *cur = thread_current ();
+  struct thread *cur = thread_current (); //  当前线程
   enum intr_level old_level;
   
   ASSERT (!intr_context ());
