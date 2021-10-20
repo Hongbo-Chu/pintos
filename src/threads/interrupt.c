@@ -112,7 +112,7 @@ intr_disable (void)
   asm volatile ("cli" : : : "memory");//保证线程不被中断
                                       //clear interrupt, 作用是将标志寄存器的IF（interrupt flag）位置为0, IF=0时将不响应可屏蔽中断。
                                       //  关闭中断
-  return old_level
+  return old_level;
 }
 
 /* Initializes the interrupt system. */
