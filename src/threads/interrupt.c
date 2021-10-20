@@ -104,15 +104,15 @@ intr_enable (void)
 enum intr_level
 intr_disable (void) 
 {
-  enum intr_level old_level = intr_get_level ();
+  enum intr_level old_level = intr_get_level ();//返回当前线程状态
 
   /* Disable interrupts by clearing the interrupt flag.
      See [IA32-v2b] "CLI" and [IA32-v3a] 5.8.1 "Masking Maskable
      Hardware Interrupts". */
   asm volatile ("cli" : : : "memory");//保证线程不被中断
                                       //clear interrupt, 作用是将标志寄存器的IF（interrupt flag）位置为0, IF=0时将不响应可屏蔽中断。
-
-  return old_level;
+                                      //  关闭中断
+  return old_level
 }
 
 /* Initializes the interrupt system. */

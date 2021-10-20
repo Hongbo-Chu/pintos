@@ -70,7 +70,7 @@ timer_calibrate (void)
 int64_t
 timer_ticks (void) 
 {
-  enum intr_level old_level = intr_disable ();  //关闭中断 返回上一个中断的状态
+  enum intr_level old_level = intr_disable ();  //关闭中断 返回上一个中断的状态（disable之前的）
                                                 // 禁止当前行为被中断， 保存禁止被中断前的中断状态
   int64_t t = ticks;
   intr_set_level (old_level);
@@ -94,7 +94,7 @@ timer_sleep (int64_t ticks)
 
   ASSERT (intr_get_level () == INTR_ON);//若中断关闭就直接结束
   while (timer_elapsed (start) < ticks) //计数ticks
-    thread_yield ();//让步
+    thread_yield ();//让步 由运行态到就绪态
 }
 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
