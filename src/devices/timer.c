@@ -87,15 +87,24 @@ timer_elapsed (int64_t then)
 
 /* Sleeps for approximately TICKS timer ticks.  Interrupts must
    be turned on. */
-void
-timer_sleep (int64_t ticks) 
-{
-  int64_t start = timer_ticks ();//线程开始时间
+// void
+// timer_sleep (int64_t ticks) 
+// {
+//   int64_t start = timer_ticks ();//线程开始时间
 
-  ASSERT (intr_get_level () == INTR_ON);//若中断关闭就直接结束
-  while (timer_elapsed (start) < ticks) //计数ticks
-    thread_yield ();//让步 由运行态到就绪态
+//   ASSERT (intr_get_level () == INTR_ON);//若中断关闭就直接结束
+//   while (timer_elapsed (start) < ticks) //计数ticks
+//     thread_yield ();//让步 由运行态到就绪态
+// }
+
+void timer_sleep(int64_t ticks){
+  //新代码将进程放到阻塞态  
+  if(ticks<0){
+    printf("time error!");
+  }
+  
 }
+
 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
    turned on. */
