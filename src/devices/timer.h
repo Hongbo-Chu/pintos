@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-12 11:17:37
+ * @LastEditTime: 2021-10-25 20:35:14
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /pintos/src/devices/timer.h
+ */
 #ifndef DEVICES_TIMER_H
 #define DEVICES_TIMER_H
 
