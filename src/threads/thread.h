@@ -101,7 +101,7 @@ struct thread
    If true, use multi-level feedback queue scheduler.
    Controlled by kernel command-line option "-o mlfqs". */
 extern bool thread_mlfqs;
-
+void blocked_thread_check (struct thread *t, void *aux UNUSED);
 void thread_init (void);
 void thread_start (void);
 
@@ -132,5 +132,5 @@ int thread_get_nice (void);
 void thread_set_nice (int);
 int thread_get_recent_cpu (void);
 int thread_get_load_avg (void);
-void blocked_thread_check (struct thread *t, void *aux UNUSED);
+//void blocked_thread_check (struct thread *t, void *aux UNUSED);
 #endif /* threads/thread.h */

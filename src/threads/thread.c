@@ -97,6 +97,7 @@ thread_init (void)
   initial_thread->tid = allocate_tid ();
 }
 
+
 /* Starts preemptive thread scheduling by enabling interrupts.
    Also creates the idle thread. */
 void
@@ -569,7 +570,7 @@ allocate_tid (void)
    Used by switch.S, which can't figure it out on its own. */
 uint32_t thread_stack_ofs = offsetof (struct thread, stack);
 
-void block_thread_check (struct thread *t, void *aux UNUSED){
+void blocked_thread_check (struct thread *t, void *aux UNUSED){
   if (t->block_time>0 && t->status == THREAD_BLOCKED){
     t->block_time -- ;
     if(t->block_time == 0){
