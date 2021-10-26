@@ -99,9 +99,16 @@ timer_elapsed (int64_t then)
 
 void timer_sleep(int64_t ticks){
   //新代码将进程放到阻塞态  
-  if(ticks<0){
-    printf("time error!");
+  if(ticks <= 0){
+    //printf("time error!");
+    return;
   }
+  ASSERT(intr_get_level() == INTR_ON);
+  enum intr_level old_level = intr_disable();
+  struct thread *current_thread = thread_current();
+  current_thread->block_time = ticks;
+  thread_block();
+  intr_set_level(old_level);
   
 }
 
@@ -174,11 +181,23 @@ timer_print_stats (void)
 }
 
 /* Timer interrupt handler. */
+
+
+// void block_thread_check (struct thread *t, void *aux UNUSED){
+//   if (t->block_time>0 && t->status == THREAD_BLOCKED){
+//     t->block_time -- ;
+//     if(t->block_time == 0){
+//       thread_unblock(t);
+//     }
+//   }
+// }
+
 static void
 timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
   thread_tick ();
+  thread_foreach (blocked_thread_check, NULL);
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer
@@ -250,3 +269,4 @@ real_time_delay (int64_t num, int32_t denom)
   ASSERT (denom % 1000 == 0);
   busy_wait (loops_per_tick * num / 1000 * TIMER_FREQ / (denom / 1000)); 
 }
+

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-12 11:17:37
- * @LastEditTime: 2021-10-25 20:35:14
- * @LastEditors: your name
+ * @LastEditTime: 2021-10-26 14:14:21
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /pintos/src/devices/timer.h
  */
@@ -26,7 +26,6 @@ void timer_sleep (int64_t ticks);
 void timer_msleep (int64_t milliseconds);
 void timer_usleep (int64_t microseconds);
 void timer_nsleep (int64_t nanoseconds);
-
 /* Busy waits. */
 void timer_mdelay (int64_t milliseconds);
 void timer_udelay (int64_t microseconds);
