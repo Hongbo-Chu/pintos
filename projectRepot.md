@@ -9,6 +9,9 @@
 #project1
 ##general idea of 1.1
 原有的`timer_sleep()`一直在调用`thread_yield()`使得线程在就绪和运行间不断切换，于是要将其修改为由运行态到阻塞态。然后通过在每个`time_tick`到来的时候调用`timer_interrupt()`来对于sleep的状态进行检测，`unblock`每个计时结束的线程。
+<font color = RED>
+系统自带`readylist`和`allList`,所以不用自己实现`blocklist`只需要遍历alllist然后判断状态是不是blocked。
+</font>
 </br>
 <font color=GREEN>
 个人的解决方案分为两部分：

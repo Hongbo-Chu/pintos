@@ -99,7 +99,7 @@ timer_elapsed (int64_t then)
 
 void timer_sleep(int64_t ticks){
   //新代码将进程放到阻塞态  
-  if(ticks <= 0){
+  if(ticks <=  0){
     //printf("time error!");
     return;
   }
