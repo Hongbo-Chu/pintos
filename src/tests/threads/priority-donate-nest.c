@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-26 11:59:37
+ * @LastEditTime: 2021-10-27 14:43:58
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /pintos/src/tests/threads/priority-donate-nest.c
+ */
 /* Low-priority main thread L acquires lock A.  Medium-priority
    thread M then acquires lock B then blocks on acquiring lock A.
    High-priority thread H then blocks on acquiring lock B.  Thus,
@@ -92,3 +100,6 @@ high_thread_func (void *lock_)
   lock_release (lock);
   msg ("High thread finished.");
 }
+
+
+//高优先级的都被lock了，但是按照写的优先级算法是按优先级从高到底执行，所以这个时候要把高优先级分配给
