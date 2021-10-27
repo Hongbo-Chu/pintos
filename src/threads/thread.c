@@ -196,7 +196,9 @@ thread_create (const char *name, int priority,
 
   /* Add to run queue. */
   thread_unblock (t);
-
+  if(thread_current()->priority < priority){
+    thread_yield();
+  }
   return tid;
 }
 
@@ -223,7 +225,7 @@ thread_block (void)
    it may expect that it can atomically unblock a thread and
    update other data. */
 void
-thread_unblock (struct thread *t) 
+thread_unblock (struct thread *t) //放到readylist中
 {
   enum intr_level old_level;
 
@@ -295,6 +297,7 @@ thread_exit (void)
    may be scheduled again immediately at the scheduler's whim. */
 void
 thread_yield (void) 
+//thread_yield其实就是把当前线程扔到就绪队列里， 然后重新schedule
 {
   struct thread *cur = thread_current (); //  当前线程
   enum intr_level old_level;
@@ -333,7 +336,7 @@ thread_set_priority (int new_priority)
 {
   thread_current ()->priority = new_priority;
   thread_yield();
-  //在设置完优先级后
+  //在设置完优先级后直接将线程放到就学队列中去，然后直接根据优先级排序
 }
 
 /* Returns the current thread's priority. */
@@ -461,6 +464,7 @@ init_thread (struct thread *t, const char *name, int priority)
 
   old_level = intr_disable ();
   //list_push_back (&all_list, &t->allelem);
+  //init还没有ready所以要放到alllist 中去
   list_insert_ordered (&all_list, &t->allelem, (list_less_func *) &thread_cmp_priority, NULL);
   intr_set_level (old_level);
 }
@@ -542,7 +546,7 @@ thread_schedule_tail (struct thread *prev)
    It's not safe to call printf() until thread_schedule_tail()
    has completed. */
 static void
-schedule (void) 
+schedule (void)//schedule其实就是拿下一个线程切换过来继续run。  
 {
   struct thread *cur = running_thread ();
   struct thread *next = next_thread_to_run ();
