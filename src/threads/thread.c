@@ -46,7 +46,7 @@ struct kernel_thread_frame
   };
 
 /* Statistics. */
-static long long idle_ticks;    /* # of timer ticks spent idle. */
+static long long idle_ticks;   //空闲 /* # of timer ticks spent idle. */
 static long long kernel_ticks;  /* # of timer ticks in kernel threads. */
 static long long user_ticks;    /* # of timer ticks in user programs. */
 
@@ -132,9 +132,9 @@ thread_tick (void)
   else
     kernel_ticks++;
 
-  /* Enforce preemption. */
+  /* Enforce preemption. *///强制优先
   if (++thread_ticks >= TIME_SLICE)
-    intr_yield_on_return ();
+    intr_yield_on_return ();//是否应该在中断返回的时候让步？
 }
 
 /* Prints thread statistics. */
@@ -195,8 +195,8 @@ thread_create (const char *name, int priority,
   sf->ebp = 0;
 
   /* Add to run queue. */
-  thread_unblock (t);
-  if(thread_current()->priority < priority){
+  thread_unblock (t);//将t放入readylist
+  if(thread_current()->priority < priority){//康康现在运行的程序优先级够不够，要是小于新加进来的话就要切换
     thread_yield();
   }
   return tid;

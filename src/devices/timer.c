@@ -182,16 +182,6 @@ timer_print_stats (void)
 
 /* Timer interrupt handler. */
 
-
-// void block_thread_check (struct thread *t, void *aux UNUSED){
-//   if (t->block_time>0 && t->status == THREAD_BLOCKED){
-//     t->block_time -- ;
-//     if(t->block_time == 0){
-//       thread_unblock(t);
-//     }
-//   }
-// }
-
 static void
 timer_interrupt (struct intr_frame *args UNUSED)
 {
