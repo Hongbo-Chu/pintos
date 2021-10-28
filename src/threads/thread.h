@@ -89,6 +89,12 @@ struct thread
     struct list_elem elem;   
     uint64_t block_time;          /* List element. */
 
+//用于优先级捐赠
+
+    int base_priority;                  /* Base priority. */
+     struct list locks;                  /* Locks that the thread is holding. */
+     struct lock *lock_waiting;          /* The lock that the thread is waiting for. */
+
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
