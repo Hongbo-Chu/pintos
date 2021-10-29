@@ -91,9 +91,9 @@ struct thread
 
 //用于优先级捐赠
 
-    int base_priority;                  /* Base priority. */
-     struct list locks;                  /* Locks that the thread is holding. */
-     struct lock *lock_waiting;          /* The lock that the thread is waiting for. */
+    int base_priority;                  /* 记录当前线程的优先级 */
+     struct list locks;            /*记录持有的锁 */
+     struct lock *lock_waiting;          /* 记录等待的哪个锁 */
 
 #ifdef USERPROG
     /* Owned by userprog/process.c. */

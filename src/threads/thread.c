@@ -336,7 +336,7 @@ thread_set_priority (int new_priority)
 {
   thread_current ()->priority = new_priority;
   thread_yield();
-  //在设置完优先级后直接将线程放到就学队列中去，然后直接根据优先级排序
+  //在设置完优先级后直接将线程放到就绪队列中去，然后直接根据优先级排序
 }
 
 /* Returns the current thread's priority. */
