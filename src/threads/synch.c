@@ -194,10 +194,16 @@ lock_acquire (struct lock *lock)
 {
   ASSERT (lock != NULL);
   ASSERT (!intr_context ());
-  ASSERT (!lock_held_by_current_thread (lock));
+  ASSERT (!lock_held_by_current_thread (lock));//不能在拥有锁的状态下继续acquire
 
   sema_down (&lock->semaphore);
   lock->holder = thread_current ();
+  /*对于每个调用申请lock的函数
+    要进行的操作：
+      1.检查当前锁是否有主人&&当前是否是mlfqs(多级反馈队列调度)
+
+  
+  */
 }
 
 /* Tries to acquires LOCK and returns true if successful or false

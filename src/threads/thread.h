@@ -91,7 +91,7 @@ struct thread
 
 //用于优先级捐赠
 
-    int base_priority;                  /* 记录当前线程的优先级 */
+     int base_priority;                  /* 记录当前线程的优先级 */
      struct list locks;            /*记录持有的锁 */
      struct lock *lock_waiting;          /* 记录等待的哪个锁 */
 
@@ -104,7 +104,7 @@ struct thread
     unsigned magic;                     /* Detects stack overflow. */
   };
 
-/* If false (default), use round-robin scheduler.
+/* If false (default), use  scheduler.
    If true, use multi-level feedback queue scheduler.
    Controlled by kernel command-line option "-o mlfqs". */
 extern bool thread_mlfqs;
