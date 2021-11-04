@@ -72,7 +72,7 @@ struct list_elem *
 list_begin (struct list *list)
 {
   ASSERT (list != NULL);
-  return list->head.next;
+  return list->head.next;//返回值是list_elem
 }
 
 /* Returns the element after ELEM in its list.  If ELEM is the

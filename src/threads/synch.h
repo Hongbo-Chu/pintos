@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-10-26 11:59:50
+ * @LastEditTime: 2021-11-04 16:21:07
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /pintos/src/threads/synch.h
+ */
 #ifndef THREADS_SYNCH_H
 #define THREADS_SYNCH_H
 
@@ -21,7 +29,9 @@ void sema_self_test (void);
 struct lock 
   {
     struct thread *holder;      /* Thread holding lock (for debugging). */
-    struct semaphore semaphore; /* Binary semaphore controlling access. */
+    struct semaphore semaphore; /* Binary semaphore controlling access. lock的队列在这里面*/
+    struct list_elem donate_queue;//用于存放捐赠的进程的队列
+    uint64_t maxPri;            //用于存放被捐赠的最高的优先级
   };
 
 void lock_init (struct lock *);
