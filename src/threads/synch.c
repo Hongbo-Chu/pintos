@@ -214,8 +214,11 @@ lock_acquire (struct lock *lock)
       //要给当前线程的所有lock的holder更新优先级
       /*如果优先级嵌套的话(就像1->3->5)的话5直接把优先级给1，不用通过3*/
       /*线程和锁是多对多映射，一个线程可以有多个锁，一个锁可以锁住多个线程*/
-      while(){
+      while(temp && current_thread->priority>temp->maxPri){
         //更新
+        temp->maxPri = current_thread->priority;
+        priority_donate(temp->holder);
+        temp =temp->holder->lock_waiting;
 
       }
     }
@@ -381,3 +384,4 @@ cond_broadcast (struct condition *cond, struct lock *lock)
   while (!list_empty (&cond->waiters))
     cond_signal (cond, lock);
 }
+

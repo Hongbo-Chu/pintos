@@ -594,3 +594,45 @@ void blocked_thread_check (struct thread *t, void *aux UNUSED){
  {
    return list_entry(a, struct thread, elem)->priority > list_entry(b, struct thread, elem)->priority;
  }
+
+ void priority_donate(struct thread* t){
+  enum intr_level old_level = intr_disable ();
+  //更新优先级 当当前线程的
+  /*有可能a lock的holder 同时在等b lock 所以要判断一下lock的holder是否ready、
+    如果ready就重新插入队列（因为优先级改变了，需要通过重新插入队列来重新排序）
+  */
+  thread_update_priority(t);
+  if(t->status == THREAD_READY){
+    list_remove(&t->elem);
+    list_insert_ordered(&ready_list, &t->elem, thread_cmp_priority, NULL);
+  } 
+  intr_set_level (old_level);
+}
+/*更新优先级：
+  将指定线程t的所有优先级，更新为当前正在运行的线程的优先级 
+  正在运行的最高优先级通过lock->maxPri传入了 
+*/
+void thread_update_priority(struct thread* t){
+  /*实现细节：
+    比较一下要更改的线程的lock队列中的最大优先级与要更改线程的base_priority
+    取最大的更新
+  */
+  enum intr_level old_level = intr_disable ();
+  int16_t tempMaxP = t->base_priority;
+  int16_t tempP;
+  if(!list_empty(&t->locks)){
+    list_sort(&t->locks, lock_cmp_priority, NULL);
+    tempP = list_entry(list_front(&t->locks), struct lock, donate_queue);
+    if(tempP>tempMaxP){
+      tempMaxP = tempP;
+    }
+  }
+  t->priority = tempMaxP;
+  intr_set_level (old_level);
+}
+
+bool
+ lock_cmp_priority (const struct list_elem *a, const struct list_elem *b, void *aux UNUSED)
+ {
+   return list_entry (a, struct lock, donate_queue)->maxPri > list_entry (b, struct lock, donate_queue)->maxPri;
+ }
