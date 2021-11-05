@@ -145,6 +145,7 @@ bool thread_cmp_priority (const struct list_elem *a, const struct list_elem *b, 
 void priority_donate(struct thread* t);
 bool
  lock_cmp_priority (const struct list_elem *a, const struct list_elem *b, void *aux UNUSED);
+void thread_remove_lock(struct lock* lock);
 
 
 #endif /* threads/thread.h */

@@ -331,12 +331,30 @@ thread_foreach (thread_action_func *func, void *aux)
 }
 
 /* Sets the current thread's priority to NEW_PRIORITY. */
+/*优先级有priority和base_priority两种
+  其中priority = max(donate, base_priority)
+      
+      
+      base_priority可以理解为一个线程自身的优先级，
+      可以通过人为更改，但不可以被donate
+*/
 void
 thread_set_priority (int new_priority) 
 {
-  thread_current ()->priority = new_priority;
-  thread_yield();
+  if(thread_mlfqs){
+    return;
+  }
+  enum intr_level old_level = intr_disable ();
+  struct thread *current_thread = thread_current ();
+  int old_priority = current_thread->priority;
+  current_thread->base_priority = new_priority;
+
+  if (list_empty (&current_thread->locks) || new_priority > old_priority){
+    thread_current ()->priority = new_priority;
+    thread_yield();
+  }
   //在设置完优先级后直接将线程放到就绪队列中去，然后直接根据优先级排序
+  intr_set_level (old_level);
 }
 
 /* Returns the current thread's priority. */
@@ -461,6 +479,9 @@ init_thread (struct thread *t, const char *name, int priority)
   t->stack = (uint8_t *) t + PGSIZE;
   t->priority = priority;
   t->magic = THREAD_MAGIC;
+  t->base_priority = priority;
+  list_init (&t->locks);
+  t->lock_waiting = NULL;
 
   old_level = intr_disable ();
   //list_push_back (&all_list, &t->allelem);
@@ -636,3 +657,12 @@ bool
  {
    return list_entry (a, struct lock, donate_queue)->maxPri > list_entry (b, struct lock, donate_queue)->maxPri;
  }
+void thread_remove_lock(struct lock* lock){
+  enum intr_level old_level = intr_disable ();
+  //先从lock的队列中将这个thread移除
+  list_remove(&lock->donate_queue);
+  //list_remove(&thread_current()->locks);
+  //然后重新排序
+  thread_update_priority (thread_current ());
+  intr_set_level (old_level);
+}
