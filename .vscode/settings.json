@@ -1,0 +1,25 @@
+{
+    "files.associations": {
+        "*.vue": "html",
+        "*.html": "html",
+        "*.inc": "c",
+        "*.tcc": "c",
+        "exception": "c",
+        "functional": "c",
+        "algorithm": "c",
+        "random": "c",
+        "fstream": "c",
+        "istream": "c",
+        "memory": "c",
+        "new": "c",
+        "numeric": "c",
+        "ostream": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "string_view": "c",
+        "cmath": "c",
+        "type_traits": "c",
+        "typeinfo": "c",
+        "utility": "c"
+    }
+}

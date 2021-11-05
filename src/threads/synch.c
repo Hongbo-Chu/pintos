@@ -195,15 +195,54 @@ lock_acquire (struct lock *lock)
   ASSERT (lock != NULL);
   ASSERT (!intr_context ());
   ASSERT (!lock_held_by_current_thread (lock));//不能在拥有锁的状态下继续acquire
+   /*对于每个调用申请lock的函数
+    要进行的操作：
+      1.检查当前锁是否有主人&&当前是否是mlfqs(多级反馈队列调度)
+      2.然后进行优先级递归
+  
+  */
+  enum intr_level old_level = intr_disable ();
+
+  if(lock->holder != NULL && !thread_mlfqs){
+    //在进行p操作之前，先进行递归donate
+    //在这一步要修改lock结构体
+    //当前线程为即将要阻塞的线程
+    struct thread* current_thread = thread_current();
+    if(current_thread->priority > lock->maxPri){
+      current_thread->lock_waiting = lock;
+      struct lock* temp = lock;
+      //要给当前线程的所有lock的holder更新优先级
+      /*如果优先级嵌套的话(就像1->3->5)的话5直接把优先级给1，不用通过3*/
+      /*线程和锁是多对多映射，一个线程可以有多个锁，一个锁可以锁住多个线程*/
+      while(){
+        //更新
+
+      }
+    }
+  }
 
   sema_down (&lock->semaphore);
   lock->holder = thread_current ();
-  /*对于每个调用申请lock的函数
-    要进行的操作：
-      1.检查当前锁是否有主人&&当前是否是mlfqs(多级反馈队列调度)
 
-  
-  */
+  if(!thread_mlfqs){
+    //此时是current_thread是lock_holder
+    struct thread* current_thread = thread_current();
+    current_thread->lock_waiting = NULL;
+    lock->maxPri = current_thread->base_priority;
+
+    //此时。lock的属性已经被更改
+    //需要让threads中lock的属性更新
+    list_insert_ordered(&current_thread->locks, &lock->donate_queue, &thread_cmp_priority, NULL);
+    /*denote_queue是list_elem结构体，记录了当前锁的信息，
+    这步是将更新后的（或第一次）锁加入到此线程的锁的队列中去。
+    */
+    if(lock->maxPri > current_thread->priority){
+      current_thread->priority = lock->maxPri;
+      thread_yield();//在更新完权重之后重新放回队列中去
+    }
+   
+  } 
+  intr_set_level(old_level);
 }
 
 /* Tries to acquires LOCK and returns true if successful or false
