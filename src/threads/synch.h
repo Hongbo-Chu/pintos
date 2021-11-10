@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-26 11:59:50
- * @LastEditTime: 2021-11-04 16:21:07
+ * @LastEditTime: 2021-11-10 12:33:31
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /pintos/src/threads/synch.h
@@ -50,6 +50,9 @@ void cond_init (struct condition *);
 void cond_wait (struct condition *, struct lock *);
 void cond_signal (struct condition *, struct lock *);
 void cond_broadcast (struct condition *, struct lock *);
+bool
+cond_sema_cmp_priority (const struct list_elem *a, const struct list_elem *b, void *aux );
+
 
 /* Optimization barrier.
 

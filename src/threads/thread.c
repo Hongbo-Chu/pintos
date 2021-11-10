@@ -669,3 +669,32 @@ void thread_remove_lock(struct lock* lock){
   thread_update_priority (thread_current ());
   intr_set_level (old_level);
 }
+
+void
+ thread_donate_priority (struct thread *t)
+ {
+   enum intr_level old_level = intr_disable ();
+   thread_update_priority (t);
+ 
+   if (t->status == THREAD_READY)
+   {
+     list_remove (&t->elem);
+     list_insert_ordered (&ready_list, &t->elem, thread_cmp_priority, NULL);
+   }
+   intr_set_level (old_level);
+ }
+
+  void
+ thread_hold_the_lock(struct lock *lock)
+ {
+   enum intr_level old_level = intr_disable ();
+   list_insert_ordered (&thread_current ()->locks, &lock->donate_queue, lock_cmp_priority, NULL);
+ 
+   if (lock->maxPri > thread_current ()->priority)
+   {
+     thread_current ()->priority = lock->maxPri;
+     thread_yield ();
+   }
+ 
+   intr_set_level (old_level);
+ }
