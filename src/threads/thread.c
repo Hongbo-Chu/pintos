@@ -179,6 +179,9 @@ thread_create (const char *name, int priority,
   init_thread (t, name, priority);
   tid = t->tid = allocate_tid ();
   t->block_time = 0;
+  t->base_priority = priority;
+  list_init (&t->locks);
+  t->lock_waiting = NULL;
   /* Stack frame for kernel_thread(). */
   kf = alloc_frame (t, sizeof *kf);
   kf->eip = NULL;
